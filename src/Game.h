@@ -30,10 +30,27 @@ class Game {
 	std::vector<Vertex4> cube;
 	std::vector<Color4> cubeColors;
 
+
 	double rotX, rotY;
 
     public:
+		Vertex4 cameraPosition;
+		Vertex4 cameraRotation;
+
+
         Game() {
+
+        	cameraPosition.x = 0;
+        	cameraPosition.y = 0;
+        	cameraPosition.z = 0;
+        	cameraPosition.w = 1;
+
+        	cameraRotation.x = 0.0;
+        	cameraRotation.y = 0.0;
+        	cameraRotation.z = 0.0;
+        	cameraRotation.w = 0.0;
+
+
         	std::cout << "draw" << std::endl;
             vertices = new Vertex4[4];
             vertices[0].x = 0;	vertices[0].y = 0;	vertices[0].z = 0;  vertices[0].w = 1;
@@ -98,6 +115,16 @@ class Game {
 			vertex.x = 40.0; vertex.y = 40.0; vertex.z =  0.0; cube.push_back(vertex); cubeColors.push_back(color);
         }
 
+        void drawCube() {
+			glTranslatef(-20, -20, 0.0);
+			glBegin(GL_TRIANGLES);
+			for (unsigned int i = 0; i< cube.size(); i++) {
+				glColor3fv(&cubeColors.at(i).r);
+				glVertex3fv(&cube.at(i).x);
+            }
+			glEnd();
+        }
+
 
         void draw() {
 
@@ -110,23 +137,32 @@ class Game {
             glLoadIdentity();
 
 
+
             //for (unsigned int x = 0; x < 10; x++) {
                 //for (unsigned int y = 0; y < 10; y++) {
                     glLoadIdentity();
-                    //glTranslatef(30*x, 30*y, 0.0);
-                    glTranslatef(20, 20, -20.0);
 
-                    glRotated(rotX, 1.0, 0.0, 0.0);
-                    glRotated(rotY, 0.0, 1.0, 0.0);
+                    glTranslated(-cameraPosition.x, cameraPosition.y, 20.0);
 
-                    glTranslatef(-15, -15, 0.0);
+					//cameraRotation.x = 45;
 
-                    glBegin(GL_TRIANGLES);
-					for (unsigned int i = 0; i< cube.size(); i++) {
-						glColor3fv(&cubeColors.at(i).r);
-						glVertex3fv(&cube.at(i).x);
-                    }
-                    glEnd();
+                    //glRotated(cameraRotation.x, 1.0, 0.0, 0.0);
+                    //glRotated(rotY, 0.0, 1.0, 0.0);
+
+					glPushMatrix();
+						glTranslatef(100, 100, 0.0);
+						drawCube();
+					glPopMatrix();
+
+					glPushMatrix();
+						glTranslatef(150, 100, 0.0);
+						drawCube();
+					glPopMatrix();
+
+					glPushMatrix();
+						glTranslatef(100, 180, 0.0);
+						drawCube();
+					glPopMatrix();
 
 					//glBegin(GL_QUADS);
 						/*for (unsigned int i = 0; i < 4; i++) {
